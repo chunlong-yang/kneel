@@ -1,0 +1,20 @@
+spring-tx
+
+
+1. TransactionSynchronizationManager 判断当前thread有没有ConnectionHolder实例，注册ConnectionHolder到thread.
+2. @Transactional 标明当前类或者方法使用事务.
+
+
+/***********************************************************************
+****************org.springframework.transaction********************
+***********************************************************************/
+3. TransactionDefinition 定义事务的传播属性
+4. org.springframework.jdbc.datasource.DataSourceTransactionManager Spring事务管理
+
+
+/***********************************************************************
+****************org.springframework.transaction.support********************
+***********************************************************************/
+. TransactionTemplate 编程式事务的实现.
+. 
+
