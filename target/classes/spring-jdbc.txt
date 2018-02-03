@@ -1,0 +1,57 @@
+spring-jdbc spring-tx
+
+/***********************************************************************
+****************org.springframework.jdbc.core********************
+***********************************************************************/
+1. JdbcTemplate 常用JDBC核心类.
+query: 需要传入SQL和RowMapper.
+   1.1 BeanPropertyRowMapper 封装一行数据,自动设置值到POJO.
+   1.2 ColumnMapRowMapper 封装一行数据，自动设置到Map.
+   1.3 SingleColumnRowMapper 封装单值数据，返回单值
+   
+
+/***********************************************************************
+****************org.springframework.jdbc.core.simple********************
+***********************************************************************/
+2. SimpleJdbcInsert 封装JDBC的插入操作 (只需要指定表名和POJO就可以了)
+Insert: 自动生成insertSQL INSERT INTO plmssc.plm_properties(propertyid,property...) VALUES(?,?,?...)
+   2.1 BeanPropertySqlParameterSource 封装一行数据，自动获取POJO属性的值.
+   2.2 MapSqlParameterSource 封装一行数据，自动获取Map中的值.
+   
+3. SimpleJdbcCall 封装JDBC调用函数存储过程的操作.(只需要传递函数或存储过程名称和参数)
+Call: 自动生成callSQL function {? = call plmssc.plm_get_date(?,?...)}
+                     SP       {call plmssc.plm_tlm_process(?,?...)}
+   3.1 BeanPropertyRowMapper 封装一行数据， 可以自动设置result到POJO.
+   
+   
+/***********************************************************************
+****************org.springframework.jdbc.core.namedparam********************
+***********************************************************************/  
+4. NamedParameterJdbcTemplate 使用name parameter代替原始的?.
+   
+   
+/***********************************************************************
+****************org.springframework.jdbc.core.support********************
+***********************************************************************/    
+5. JdbcDaoSupport 使用jdbcTemplate的便利类,并且提供一个初始化Template的功能，你可以设置fetchsize等等来提高批量操作的效率.
+
+/***********************************************************************
+****************org.springframework.jdbc.datasource********************
+***********************************************************************/  
+6. DataSourceUtils JDBCTemplate传递DataSource获取数据库连接.(如果开启事务到当前Thread,那么之后所有的操作都在事务内，直到事务commit.)
+7. ConnectionHolder DataSource连接保持，事务绑定这个实例到thread,如果事务存在，连接可用的话，直接返回连接.
+8. TransactionSynchronizationManager 判断当前thread有没有ConnectionHolder实例，注册ConnectionHolder到thread.
+9. DataSourceTransactionManager 在getTransaction()的时候开启事务,并且把ConnectionHolder放到Thread,在commit/rollback的时候清空Thread.
+
+/***********************************************************************
+****************org.springframework.jdbc.support.incrementer********************
+***********************************************************************/ 
+10. OracleSequenceMaxValueIncrementer 自动生成select " + getIncrementerName() + ".nextval from dual,并且通过getNextKey()获取下一个序列.
+
+11. JndiDataSourceLookup 支持JNDI数据源.
+
+/***********************************************************************
+****************org.springframework.jdbc.datasource.embedded********************
+***********************************************************************/ 
+12. EmbeddedDatabaseConfigurerFactory 对HSQL, H2, DERBY等内置数据库的支持
+ 

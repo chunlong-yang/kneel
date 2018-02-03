@@ -33,7 +33,7 @@ http://www.springframework.org/schema/aop http://www.springframework.org/schema/
 	
 	<!-- transaction Template -->
 	<bean id="tranTemplate" class = "org.springframework.transaction.support.TransactionTemplate">
-		<property name="transactionManager" ref = "transactionManager">
+		<property name="transactionManager" ref = "transactionManager"/>
 	</bean>
 
 </beans>

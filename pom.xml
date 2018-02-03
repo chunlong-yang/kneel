@@ -54,12 +54,13 @@
 			<version>${commons.dbcp.version}</version>
 		</dependency>
 		
-		<!-- oracle -->
+		<!-- oracle --> 
 		<dependency>
 			 <groupId>oracle</groupId>
 			 <artifactId>ojdbc</artifactId>
 			 <version>${oracle.version}</version>
-		 </dependency>
+		 </dependency> 
+		  
 		 
 		 <!-- log -->
 		<dependency>

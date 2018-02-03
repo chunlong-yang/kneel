@@ -35,7 +35,7 @@ public class SpringUtils {
 	
 	private static ApplicationContext webCtx;
 
-	private static String[] appXmls = { "spring-report-beans.xml" };
+	private static String[] appXmls = { "spring-beans.xml" };
 	
 	private static String[] sevXmls = { "spring-service-beans.xml" };
 	
