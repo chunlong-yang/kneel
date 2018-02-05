@@ -1,0 +1,37 @@
+
+ThreadPoolExecutor
+
+corePoolSize: the number of threads to keep in the pool.(even if they are idle)
+maximumPoolSize: the maximum number of threads to allow in the pool.
+keepAliveTime: when the number of threads is greater than the core, this is the maximum time that excess idle threads will wait for new tasks before terminating.
+unit: the time unit for the keepAliveTime argument. Can be NANOSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS and DAYS.
+workQueue: the queue used for holding tasks before they are executed,This queue will hold only the Runnable tasks submitted by the execute method. 
+           Default choices are SynchronousQueue for multi-threaded pools and LinkedBlockingQueue for single-threaded pools.
+threadFactory: the factory to use when the executor creates a new thread.           
+
+ 
+ public class PLMThreadFactory implements ThreadFactory { 
+	public Thread newThread(Runnable r) {   
+		Thread thread = new Thread(r);    
+	thread.setPriority(Thread.MIN_PRIORITY);
+	return thread;
+	} 
+}
+threadPool = new ThreadPoolExecutor(10, 10, 300,TimeUnit.SECONDS,new ArrayBlockingQueue(10),new PLMThreadFactory());
+相当于建了一个Executors.newFixedThreadPool(10),但是使用了10大小的队列来保存等待的线程，并且重写ThreadFactory. 这里有一个小小的BUG,既然是fixed thread, 我们就不需要keepAliveTime(设置为0).
+而且这里的ArrayBlockingQueue也应该设置大一点,因为保存的是threadPool.submit(Runnable..),如果这里的queue刚好和core size相等，如果线程池调度一个线程运行，那么这个queue就会-1,这样的话一直保持
+十个等待执行的Task.
+
+我们控制线程的等待数量一直是10个，然后等待60s,在继续添加，这样可以控制等待队列的长度, 那么为什么要控制队列的长度，多长合适?, 有必要重写线程的优先级吗?
+
+Executors
+•newFixedThreadPool: this method returns a thread pool whose maximum size is fixed. It will create new threads as needed up to the maximum configured size. When the number of threads hits the maximum, the thread pool will maintain the size constant.
+•newCachedThreadPool: this method returns an unbounded thread pool, that is a thread pool without a maximum size. However, this kind of thread pool will tear down unused thread when the load reduces.
+•newSingleThreadedExecutor: this method returns an executor that guarantees that tasks will be executed in a single thread.
+•newScheduledThreadPool: this method returns a fixed size thread pool that supports delayed and timed task execution.
+
+Advice:
+Executors.newFixedThreadPool(int nThreads)
+
+1. 我们用以上方法控制了执行的线程数量， 解决了系统的可预测性和稳定性(无限制的创建线程，会导致系统奔溃).
+2. 我们还必须限制可以提交和排队等待以后执行的作业数量. (自己程序控制添加到队列的数量.比如每添加10个线程就等待60s,可能任务大概)
