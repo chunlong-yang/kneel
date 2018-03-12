@@ -1,0 +1,13 @@
+spring expression
+ 
+1. ExpressionParser: 解析表达式字符串到表达式(SpelExpressionParser).
+2. EvaluationContext: 表达式中使用对象的引用(StandardEvaluationContext).
+3. TemplateParserContext：配置表达式的前缀和后缀.
+ 
+   String greetingExp = "Hello, #{ #user }"; （1）
+   ExpressionParser parser = new SpelExpressionParser(); （2）
+   EvaluationContext context = new StandardEvaluationContext(); 
+   context.setVariable("user", "Gangyou"); (3) 
+   Expression expression = parser.parseExpression(greetingExp, new TemplateParserContext()); (4) 
+   System.out.println(expression.getValue(context, String.class)); (5) 
+ 

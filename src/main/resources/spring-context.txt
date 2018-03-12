@@ -1,0 +1,132 @@
+spring-context
+
+/***********************************************************************
+****************org.springframework.context********************
+***********************************************************************/
+
+1. ApplicationContext 核心接口配置Application.
+   1.1 Bean instantiation/wiring
+   1.2 Automatic BeanPostProcessor registration
+   1.3 Automatic BeanFactoryPostProcessor registration
+   1.4 Convenient MessageSource access (for i18n)
+   1.5 ApplicationEvent publication
+   
+   
+
+2. org.springframework.context.support.AbstractApplicationContext
+   2.1 obtainFreshBeanFactory() 告诉子类refreshBeanFactory()刷新BeanFactory.
+   2.2 postProcessBeanFactory(beanFactory); 允许改变Bean定义.
+   2.2 preInstantiateSingletons 预实例化单例
+   
+3. org.springframework.context.support.AbstractRefreshableApplicationContext
+   3.1 refreshBeanFactory()   创建 DefaultListableBeanFactory. 告诉紫泪loadBeanDefinitions(beanFactory).
+
+4. org.springframework.context.support.AbstractXmlApplicationContext
+   4.1 loadBeanDefinitions()  使用XmlBeanDefinitionReader来读取配置文件,告诉子类getConfigResources返回配置文件.
+   
+5. org.springframework.context.support.ClassPathXmlApplicationContext
+   5.1  configLocation  提供配置文件"spring-beans.xml".
+   
+6.  org.springframework.context.config.ContextNamespaceHandler
+   6.1 context:property-placeholder 制定spring配置文件的placeholder.(PropertyPlaceholderBeanDefinitionParser) 使用这个标签的话，必须使用ApplicationContext,BeanFactory不可用.
+                因为使用了BeanFactoryPostProcessor,这个只有在ApplicationContext中进行初始化了,这个标签会访问spring的BeanDefinition,然后配置placeholder.
+   6.2 context:component-scan base-package="com.bluesky" 指定context自动扫描注册Spring Bean.
+   6.3 context:annotation-config 激活annotations在Bean已经注册在application Context中（无论xml或scan）
+      6.3.1 ConfigurationClassPostProcessor      --> @Configuration 表明此类作为ApplicationContext-->@PropertySource 添加key/value到Environment对象，或者使用@Value来引用,@ComponentScan 扫描,@Import 引入@Configuration类定义,@Bean,@ImportResource 引入bean定义从xml
+      6.3.2 AutowiredAnnotationBeanPostProcessor -->  @Autowired 自动搜索类中的注解，然后自动注入bean. 
+      6.3.2 RequiredAnnotationBeanPostProcessor  -->  @Required 验证标注的泪必须包含当前依赖.
+      6.3.3 CommonAnnotationBeanPostProcessor    -->  @PostConstruct @PreDestroy 在Bean初始化或者销毁的时候会调用.
+      6.3.4 PersistenceAnnotationBeanPostProcessor--> JPA的持久化标签.
+   6.4 context:component-scan 包含以上激活annotations, 然后扫描"base-package"注册bean到Application Context.所以注册了scan一般就不需要config了，不过加上也没毛病，老铁.
+   
+   
+7. org.springframework.beans.factory.config.BeanFactoryPostProcessor
+   void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) 修改BeanFactory内部的beanDefinition初始化但是没有实例化.
+   
+/***********************************************************************
+****************org.springframework.stereotype********************
+***********************************************************************/
+
+8. @Component  组件,就是普通的spring bean.
+AnnotationConfigApplicationContext
+@ComponentScan 制定basepackage, 然后扫描有以下Annotation的类
+ClassPathBeanDefinitionScanner:扫描Bean,然后用AnnotatedBeanDefinitionReader来读取Bean,然后注册@Component的组件到BeanFactory.
+AutowiredAnnotationBeanPostProcessor: 自动注册@Autowired/@Value的值
+RequiredAnnotationBeanPostProcessor: 严重依赖的Bean必须存在
+CommonAnnotationBeanPostProcessor:  @PostConstruct @PreDestroy 在Bean初始化或者销毁的时候会调用.
+   
+   
+9. @Repository 仓库,一般标注DAO, 封装DataAccessException异常, 是一个特殊的组件,在组建扫描的时候会自动注册为bean.
+ 
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface Repository {
+
+	/**
+	 * The value may indicate a suggestion for a logical component name,
+	 * to be turned into a Spring bean in case of an autodetected component.
+	 * @return the suggested component name, if any
+	 */
+	String value() default "";
+
+}
+
+
+
+
+10. @Service   服务,封装成可以独立提供服务的类,也可以成为业务服务门面, 是一个特殊的组件,在组建扫描的时候会自动注册为bean.
+ 
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface Service {
+
+	/**
+	 * The value may indicate a suggestion for a logical component name,
+	 * to be turned into a Spring bean in case of an autodetected component.
+	 * @return the suggested component name, if any
+	 */
+	String value() default "";
+
+}
+
+11. @Controller 控制, 作为Web的控制器,是一个特殊的组件,在组建扫描的时候会自动注册为bean.
+
+@Target({ElementType.TYPE})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component
+public @interface Controller {
+
+	/**
+	 * The value may indicate a suggestion for a logical component name,
+	 * to be turned into a Spring bean in case of an autodetected component.
+	 * @return the suggested component name, if any
+	 */
+	String value() default "";
+
+}
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   

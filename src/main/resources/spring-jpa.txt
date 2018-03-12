@@ -1,0 +1,10 @@
+spring-data-jpa
+spring-data-commons/hibernate-entitymanager/hibernate-commons-annotations
+
+Spring JPA：
+Entity: 你需要定义一个实体类,用@Entity注解，这个实体类对应于数据库的表,并且当前类必须扫描到entityManagerFactory里面
+Repository: 你需要制定repository的包来扫描这个Repository,只需要继承CrudRepository.
+
+JPA解决了基本的增删改查的代码，所以很多业务代码就可以定义了，也节省了很多的代码.
+
+

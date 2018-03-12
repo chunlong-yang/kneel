@@ -10,7 +10,7 @@ http://www.springframework.org/schema/tx http://www.springframework.org/schema/t
 http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
 http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
 	
-	<context:property-placeholder location="config.properties"/>
+	<context:property-placeholder location="derby-config.properties"/>
 
 	<!-- Data source -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"

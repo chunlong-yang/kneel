@@ -1,0 +1,6 @@
+spring-orm
+
+主要继承hibernate, jdo,jpa的支持
+
+JPA:(Java Persistent API)JPA是规范，不是ORM框架，是ORM框架的规范，JPA没有实现ORM， 具体实现由ORM厂商提供.[@Entity类,EntityManagerFactory,EntityManager]
+JDO:(Java Data Object )是Java对象持久化的新的规范，也是一个用于存取某种数据仓库中的对象的标准化API。(PersistenceManager,Query)  

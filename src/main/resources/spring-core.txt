@@ -1,0 +1,14 @@
+spring-core
+
+1. org.springframework.core.io.Resource 资源接口.
+   InputStream getInputStream() 通过这个方法，读取这个资源.
+2. org.springframework.core.io.FileSystemResource 文件资源读取实现.
+   this.file = new File(path);
+   return new FileInputStream(this.file);
+3. org.springframework.core.io.ClassPathResource ClassPath资源读取接口
+   this.classLoader = (classLoader != null ? classLoader : ClassUtils.getDefaultClassLoader());
+   is = this.classLoader.getResourceAsStream(this.path);
+   return is;
+4. org.springframework.core.io.UrlResource  URl资源读取
+   URLConnection con = this.url.openConnection();
+   return con.getInputStream();

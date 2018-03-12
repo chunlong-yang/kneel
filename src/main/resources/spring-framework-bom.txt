@@ -1,0 +1,29 @@
+使用Spring的不同模块时，可能由于使用不同版本的Spring模块引入同一第三方库的不同版本。
+Maven 通过 “BOM” 来解决这个问题：在dependencyManagement中引入spring-framework-bom来确保所有的spring模块都使用统一的版本：
+
+
+<dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-framework-bom</artifactId>
+            <version>4.1.1.RELEASE</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+    </dependencies>
+</dependencyManagement>
+
+此时，所有使用的spring模块dependency都不需要在声明version属性。例如：
+ 
+
+<dependencies>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+    </dependency>
+<dependencies>

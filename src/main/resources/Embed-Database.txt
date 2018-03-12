@@ -1,0 +1,111 @@
+总结：因为我之前用的最多的是Oracle,而 H2支持sequence,所以我决定使用H2作为我的内嵌数据库.
+
+HSQL: HSQLDB uses AUTO_INCREMENT, like MYSQL and MS SQL Server
+
+H2: H2 uses sequences, like ORACLE
+
+H2也可以内嵌到JavaApplication中，或者client/server模式.当然也可以跑内存模式.
+特点: 速度快，用Java编写，支持SQL和JDBC,有嵌入和server模式,支持集群和多版本支持.
+特性: 1. 支持事务，支持2次提交,表级别锁.
+      2. 只读，临时表支持.
+
+但是H2 支持sequnce,
+create sequence c_seq;
+select c_seq.nextval from dual      
+      
+下载解压运行H2.bat: 访问http://10.248.65.210:8082   
+这个界面非常友好，
+1. 如果你使用Embedded模式
+Driver Class: org.h2.Driver
+JDBC URL    : jdbc:h2:~/testdb
+User Name   : admin
+Password    :
+
+2. 如果使用Server模式
+Driver Class: org.h2.Driver
+JDBC URL    : jdbc:h2:tcp://localhost/~/testdb
+User Name   : sa
+Password    :
+
+3. 我们使用Server模式做测试.
+Driver Class: org.h2.Driver
+JDBC URL    : jdbc:h2:tcp://localhost/~/testdb
+User Name   : admin
+Password    : admin
+
+4. Spring使用H2
+内存模式:"jdbc:h2:mem:h2db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false" 
+内嵌模式:"jdbc:h2:~/h2db" 
+网络模式:"jdbc:h2:tcp://localhost/~/h2db" 
+
+
+DERBY: 在JDK1.7之后就自带了.
+
+http://hotpepper.iteye.com/blog/237831
+
+Setting:
+DERBY_HOME: C:\Users\e557400\Desktop\all\newdoc\Investigate\derby\db-derby-10.12.1.1-bin\
+PATH: C:\Users\e557400\Desktop\all\newdoc\Investigate\derby\db-derby-10.12.1.1-bin\bin
+
+一般只有当你通过derbyrun.jar来运行Derby工具时才会使用这些脚本。
+setEmbeddedCP:内嵌模式, 添加derby.jar,derbytools.jar到你的classpath.
+setNetworkServerCP: 网络模式, 用该脚本来设置Derby服务端的classpath变量。该脚本将derbynet.jar添加到环境变量中；
+setNetworkClientCP: 网络模式,用该脚本来设置Derby客户端的classpath变量。该脚本将derbyclient.jar和derbytools.jar添加到环境变量中。
+
+sysinfo:  使用sysinfo可以显示你的Java环境信息和Derby的版本信息.
+dblook: 使用dblook可以将全部或者部分数据库的DDL定义导出到控制台或者文件中。使用方法：
+        dblook.bat –d <sourceDBUrl> [Options]
+
+*. 运行内嵌模式的Derby数据库
+ij: 使用ij工具来进行数据库交互，执行SQL脚本，如查询、增删改、创建表等等, exit 退出.
+   connect 'jdbc:derby:firstdb;create=true';        
+   
+ 1. 通过connect命令可以与指定数据库创建连接，通过一个JDBC URL来指定与哪个数据库创建连接。ij命令是不区分大小写的。
+ 2. 参数中jdbc:derby是Derby数据库的驱动协议；firstdb是数据库命，由于没有指定路径，数据库将会被创建在当前你命令行下所在的目录下；
+    create=true表示如果数据库不存在，则创建该数据库；“;”是ij命令的终止符。当数据库创建成功时，
+    Derby会在当前你命令行下所在的目录下创建一个与数据库命一致（这里是firstdb）的目录，其中存放了数据库的文件。
+     C:\Users\e557400\Desktop\all\newdoc\Investigate\derby\db-derby-10.12.1.1-bin\bin\firstdb
+3. 与数据库连接上后，就可以开始执行SQL脚本了，如创建一个表格：
+   create table firsttable(id int primary key, name varchar(20));     
+4. 然后插入记录：
+    insert into firsttable values(1, 'Hotpepper');   
+5. 可以执行查询：
+   select * from firsttable;
+6. 也可以通过run命令来执行sql文件
+   run 'E:\derby\demo\programs\toursdb\ToursDB_schema.sql';   
+   你可以在当前你命令行下所在的目录中找到一个derby.log的日志文件，derby在其中记录的数据库启动、关闭的信息。   
+7. 显示所有表
+   show tables; 
+   
+*. 运行网络模式的Derby数据库
+
+1. start server启动服务端: startNetworkServer.bat   
+2. 启动ij 连接服务器: connect 'jdbc:derby://localhost:1527/firstdb;create=true'; connect 'jdbc:derby://localhost:1527/testdb;create=true';
+参数中的数据库命部分和内嵌模式不同，这里使用了“//localhost:1527/”，访问网络模式的URL需要指定服务器的IP地址和端口，其它的就和内嵌模式一样了。
+
+*. 在Java应用程序中访问Derby数据库
+使用Java代码访问Derby数据库与访问其它数据库的区别如下：
+1） JDBC驱动的不同；
+2） 数据库连接URL的不同；
+3） 在访问内嵌模式数据库时，需要显示关闭数据库。
+下面分别实例访问内嵌模式和网络模式Derby数据库的代码
+1） 访问内嵌模式Derby数据库
+当使用Derby的嵌入式模式时，并没有复杂的配置和特殊的API需要你去学习。实际上，你仅仅需要做： 
+1. 确保Derby JARs文件在你的应用程序classpath里 
+2. 使用嵌入式JDBC驱动 
+3. 写数据库访问代码到JDBC 
+
+String driver = “org.apache.derby.jdbc.EmbeddedDriver”;
+String url = “jdbc:derby:firstdb;create=true”;
+应用程序有责任需要在程序结束时关闭Derby数据库
+ DriverManager.getConnection("jdbc:derby:;shutdown=true");
+ 
+ 2） 访问网络模式Derby数据库
+网络模式和内嵌模式的不同出在于：
+A． 数据库连接URL的不同；
+B． 应用程序退出时无效关闭Derby数据库；
+C． 数据库驱动的不同；
+String driver = “org.apache.derby.jdbc.ClientDriver”;
+String url = “jdbc:derby: //localhost:1527/firstdb;create=true”;
+应用程序在运行结束时不应该关闭Derby数据库
+
