@@ -10,8 +10,8 @@
   <url>http://maven.apache.org</url>
   
   <properties> 
-		<maven.compiler.source>1.6</maven.compiler.source>
-	    <maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
+	    <maven.compiler.target>1.7</maven.compiler.target>
 	    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
@@ -20,6 +20,11 @@
 		<commons.dbcp.version>1.4</commons.dbcp.version>
 		<oracle.version>11.2</oracle.version>
 		<log4j.version>1.2.17</log4j.version>
+		<derby.version>10.12.1.1</derby.version>
+		<h2.version>1.4.196</h2.version>
+		<hibernate.version>5.1.0.Final</hibernate.version>
+		<hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
+		<spring.data.version>1.11.8.RELEASE</spring.data.version>
     </properties>
   <dependencies>
   		<!--spring -->
@@ -37,7 +42,7 @@
         
 		<dependency>
 		     <groupId>org.springframework</groupId>
-		     <artifactId>spring-context</artifactId>
+		     <artifactId>spring-orm</artifactId>
 		     <version>${spring.version}</version> 
         </dependency>  
         
@@ -47,6 +52,32 @@
 		     <version>${spring.version}</version> 
         </dependency>  
         
+        <dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-test</artifactId>
+		    <version>${spring.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>org.hibernate.javax.persistence</groupId>
+		    <artifactId>hibernate-jpa-2.1-api</artifactId>
+		    <version>${hibernate.jpa.version}</version>
+		</dependency>
+				
+		
+		<dependency>
+		     <groupId>org.springframework.data</groupId>
+		     <artifactId>spring-data-jpa</artifactId>
+		     <version>${spring.data.version}</version> 
+        </dependency>  
+		
+		<dependency>
+		     <groupId>org.springframework.data</groupId>
+		     <artifactId>spring-data-jpa</artifactId>
+		     <version>${spring.data.version}</version> 
+        </dependency>  
+        
         <!-- dbcp -->
         <dependency>
 			<groupId>commons-dbcp</groupId>
@@ -54,13 +85,43 @@
 			<version>${commons.dbcp.version}</version>
 		</dependency>
 		
-		<!-- oracle --> 
+		<!-- oracle -->
 		<dependency>
 			 <groupId>oracle</groupId>
 			 <artifactId>ojdbc</artifactId>
 			 <version>${oracle.version}</version>
+		 </dependency>
+		
+		<!-- derby --> 
+		<dependency>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derby</artifactId>
+		    <version>${derby.version}</version>
+<!-- 		    <scope>test</scope> -->
+		</dependency>
+		
+		<!-- H2 --> 
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>${h2.version}</version>
+<!-- 		    <scope>test</scope> -->
+		</dependency>
+		
+		<!-- use hibernate impl jpa -->		
+		 <dependency> 
+		      <groupId>org.hibernate</groupId> 
+		      <artifactId>hibernate-entitymanager</artifactId> 
+		      <version>${hibernate.version}</version> 
 		 </dependency> 
-		  
+		
+		
+		<dependency>
+		    <groupId>org.apache.derby</groupId>
+		    <artifactId>derbyclient</artifactId>
+		    <version>${derby.version}</version>
+<!-- 		    <scope>test</scope> -->
+		</dependency>
 		 
 		 <!-- log -->
 		<dependency>
